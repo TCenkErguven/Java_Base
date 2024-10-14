@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'application'
+}
+
+def kotlinVersion = '2.0.20'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply plugin: 'application'
+
+    apply from: "${rootDir}/dependencies.gradle"
+}
+
+subprojects {
+    group 'com.java.base'
+    version '0.0.1'
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+    }
+
+    dependencies {
+        implementation libs.springBootWeb
+        implementation libs.springBootValidation
+        implementation libs.lombok
+        annotationProcessor libs.lombok
+        implementation libs.openApi
+        implementation libs.mapStruct
+        annotationProcessor libs.mapStructProcessor
+        implementation libs.javaJWT
+        implementation libs.springBootDataRedis
+        implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+        implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2"
+    }
+
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
