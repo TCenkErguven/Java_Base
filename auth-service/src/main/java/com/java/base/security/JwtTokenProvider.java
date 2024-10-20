@@ -2,8 +2,6 @@ package com.java.base.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +11,11 @@ import java.util.Optional;
 
 @Service
 public class JwtTokenProvider {
-    @Value("${secretkey}")
+    @Value("${jwt.secretkey}")
     String secretKey;
-    @Value("${audience}")
+    @Value("${jwt.audience}")
     String audience;
-    @Value("${issuer}")
+    @Value("${jwt.issuer}")
     String issuer;
 
     public Optional<String> createToken(Long id){
@@ -54,22 +52,6 @@ public class JwtTokenProvider {
         }catch (Exception e){
             System.out.println(e.getMessage());
             return Optional.empty();
-        }
-    }
-
-    public Optional<Long> getIdFromToken(String token) throws Exception {
-        try{
-            Algorithm algorithm = Algorithm.HMAC512(secretKey);
-            JWTVerifier verifier = JWT.require(algorithm).withAudience(audience).withIssuer(issuer).build();
-            DecodedJWT decodedJWT = verifier.verify(token);
-            if (decodedJWT == null){
-                throw new Exception("Invalid Token");
-            }
-            Long id = decodedJWT.getClaim("id").asLong();
-            return Optional.of(id); // == Optional<Long>
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new Exception("Invalid Token");
         }
     }
 

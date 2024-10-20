@@ -7,4 +7,5 @@ dependencies {
     implementation libs.springBootJpa
     implementation libs.postgresql
     implementation libs.springCrypto
+    implementation libs.springBootDataRedis
 }

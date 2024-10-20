@@ -2,15 +2,19 @@ server:
   port: 9090
 
 spring:
+  session:
+    redis:
+      repository-type: indexed
+      namespace: "java_base:auth-application"
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password:  1234
+    password: 1234
     url: jdbc:postgresql://localhost:5432/java_base
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -19,4 +23,3 @@ jwt:
   secretkey: secretkey
   audience: audience
   issuer: issuer
-

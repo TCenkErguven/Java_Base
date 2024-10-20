@@ -1,4 +1,4 @@
-package com.java.base.repository;
+package com.java.base.repository.Base;
 
 import com.java.base.model.base.BaseModel;
 import lombok.RequiredArgsConstructor;

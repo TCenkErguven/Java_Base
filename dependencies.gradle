@@ -1,13 +1,15 @@
 ext {
     versions = [
-            springBoot    : "3.3.4",
+            springBoot    : "3.3.2",
+            springSecurity : "6.3.3",
             postgresql    : "42.7.3",
-            lombok        : "1.18.26",
+            lombok        : "1.18.30",
             openApi       : "1.6.14",
             mapStruct     : "1.5.3.Final",
             springCloud   : "3.1.5",
             jwt           : "4.3.0",
-            crypto        : "6.3.3"
+            crypto        : "6.3.3",
+            log4j         : "2.24.1"
     ]
 
     libs = [
@@ -15,6 +17,7 @@ ext {
             springBootJpa               : "org.springframework.boot:spring-boot-starter-data-jpa:$versions.springBoot",
             springBootValidation        : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
             springCrypto                : "org.springframework.security:spring-security-crypto:$versions.crypto",
+            springSecurity               : "org.springframework.security:spring-security-core:$versions.springSecurity",
             //postgres
             postgresql                  : "org.postgresql:postgresql:$versions.postgresql",
             //lombok
@@ -26,6 +29,10 @@ ext {
             //FeignClient
             javaJWT                     : "com.auth0:java-jwt:$versions.jwt",
             //REDIS
-            springBootDataRedis: "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot",
+            springBootDataRedis         : "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot",
+            springBootSessionRedis      : "org.springframework.session:spring-session-data-redis:$versions.springBoot",
+            //Log4j
+            log4jBom                    : "org.apache.logging.log4j:log4j-bom:$versions.log4j",
+            log4jApi                    : "org.apache.logging.log4j:log4j-api:$versions.log4j"
     ]
 }

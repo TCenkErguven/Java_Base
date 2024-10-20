@@ -1,7 +1,5 @@
 package com.java.base.model.base
 
-import java.time.LocalDateTime
-
 interface BaseModel {
     var createdBy: String
     var updatedBy: String

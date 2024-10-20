@@ -1,4 +1,4 @@
-package com.java.base.repository;
+package com.java.base.repository.Base;
 
 import java.util.List;
 import java.util.Optional;
