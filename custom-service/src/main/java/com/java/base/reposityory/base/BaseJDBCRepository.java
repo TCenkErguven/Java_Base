@@ -69,7 +69,7 @@ public abstract class BaseJDBCRepository<T,ID> implements BaseDao<T,ID> {
 
     protected Class<T> getGenericType() throws TypeNotPresentException, MalformedParameterizedTypeException {
         ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        return (Class<T>) parameterizedType.getActualTypeArguments()[0];
+        return (Class<T>) parameterizedType.getActualTypeArguments()[0];    //#TODO improvements will be done for the warning
     }
 
 }
