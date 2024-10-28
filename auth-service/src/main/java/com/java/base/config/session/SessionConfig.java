@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.security.jackson2.SecurityJackson2Modules;
 
 @Configuration
 public class SessionConfig implements BeanClassLoaderAware {
@@ -25,7 +24,7 @@ public class SessionConfig implements BeanClassLoaderAware {
      */
     private ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModules(SecurityJackson2Modules.getModules(this.loader));
+    //    mapper.registerModules(SecurityJackson2Modules.getModules(this.loader));
         return mapper;
     }
 

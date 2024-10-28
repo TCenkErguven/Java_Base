@@ -20,4 +20,4 @@ data class Auth (
     override var created: Long,
     override var updated: Long,
     override var deleted: Long?,
-): BaseModel
+): BaseModel(createdBy,updatedBy,created,updated,deleted)

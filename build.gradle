@@ -40,7 +40,8 @@ allprojects {
 
     dependencies {
         implementation libs.springBootWeb
-        implementation libs.springSecurity
+    //    implementation libs.springSecurity
+    //    implementation libs.springSecurityCore
         implementation libs.springBootValidation
         implementation libs.lombok
         annotationProcessor libs.lombok
@@ -48,8 +49,8 @@ allprojects {
         implementation libs.mapStruct
         annotationProcessor libs.mapStructProcessor
         implementation libs.javaJWT
-        implementation libs.springBootDataRedis
-        implementation libs.springBootSessionRedis
+    //    implementation libs.springBootDataRedis
+    //    implementation libs.springBootSessionRedis
         implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
         implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
