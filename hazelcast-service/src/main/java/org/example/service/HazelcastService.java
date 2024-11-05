@@ -18,7 +18,7 @@ public class HazelcastService {
         this.cacheService = cacheService;
     }
 
-    // #TODO Logger will be added instead of system.out
+    // #TODO Logger will be added instead of system.out and Impl file configuration will be added soon...
 
     public SaveRequestDto findResponseByUUID(String uuid){
         Cache cache = cacheService.getCache("save-dto");
