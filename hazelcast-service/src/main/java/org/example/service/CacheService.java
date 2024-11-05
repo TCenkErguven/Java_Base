@@ -31,7 +31,7 @@ public class CacheService {
         try {
             Thread.sleep(5000);
             return dto;
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
             throw new RuntimeException("Error during processing", e);
         }
