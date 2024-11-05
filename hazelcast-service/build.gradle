@@ -1,0 +1,12 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+dependencies {
+    implementation libs.postgresql
+    implementation libs.hazelcastSpring
+    implementation libs.springCache
+    implementation libs.springRetry
+    implementation libs.springAOP
+}
