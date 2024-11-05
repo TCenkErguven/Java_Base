@@ -21,3 +21,5 @@ hazelcast:
   management:
     center:
       enabled: true
+
+cacheName: save-dto

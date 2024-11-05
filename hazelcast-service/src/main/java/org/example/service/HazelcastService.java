@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.dto.SaveRequestDto;
 import org.example.exception.ErrorType;
 import org.example.exception.HazelCastServiceException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -13,15 +14,19 @@ import org.springframework.stereotype.Service;
 public class HazelcastService {
     private final DBService dbService;
     private final CacheService cacheService;
-    public HazelcastService(DBService dbService, CacheService cacheService){
+    private final String cacheName;
+
+    public HazelcastService(DBService dbService, CacheService cacheService, @Value("${cacheName}") String cacheName){
         this.dbService = dbService;
         this.cacheService = cacheService;
+        this.cacheName = cacheName;
     }
 
     // #TODO Logger will be added instead of system.out and Impl file configuration will be added soon...
+    // #TODO cacheName will be get from yml properties
 
     public SaveRequestDto findResponseByUUID(String uuid){
-        Cache cache = cacheService.getCache("save-dto");
+        Cache cache = cacheService.getCache(cacheName);
         SaveRequestDto existingDto = null;
 
         // Cache control for dto
