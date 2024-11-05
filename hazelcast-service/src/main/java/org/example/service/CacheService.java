@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 public class CacheService {
 
     private final CacheManager cacheManager;
-    private final DBService dbService;
 
-    public CacheService(CacheManager cacheManager, DBService dbService){
+    public CacheService(CacheManager cacheManager){
         this.cacheManager = cacheManager;
-        this.dbService = dbService;
     }
 
     public Cache getCache(String cacheName){
