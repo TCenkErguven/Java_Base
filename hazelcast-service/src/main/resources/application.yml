@@ -1,0 +1,23 @@
+server:
+  port: 9070
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+    url: jdbc:postgresql://localhost:5432/java_base
+
+hazelcast:
+  network:
+    port:
+      port: 5701
+    join:
+      multicast:
+        enabled: true
+  jet:
+    enable: true
+    resource-upload-enabled: true
+  management:
+    center:
+      enabled: true

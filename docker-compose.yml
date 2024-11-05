@@ -4,11 +4,11 @@ version: '3.1'
 
 services:
   db:
-    container_name: postgres
+    container_name: postgres-base
     image: postgres
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: 1234
@@ -16,8 +16,24 @@ services:
   redis:
     image: redis
     ports:
-      - 6379:6379
+      - "6379:6379"
   redisinsight:
     image: redis/redisinsight:latest
     ports:
-      - 5540:5540
+      - "5540:5540"
+
+  hazelcast:
+    image: hazelcast/hazelcast:latest
+    ports:
+      - "5701:5701"
+    environment:
+      - HAZELCAST_NETWORK_PORT=5701  # Ensure this is set correctly
+      - HAZELCAST_CLUSTER_NAME=dev
+
+  management-center:
+    image: hazelcast/management-center:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - MC_DEFAULT_CLUSTER=dev
+      - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast

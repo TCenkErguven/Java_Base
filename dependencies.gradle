@@ -10,7 +10,11 @@ ext {
             springCloud     : "3.1.5",
             jwt             : "4.3.0",
             crypto          : "6.3.3",
-            log4j           : "2.24.1"
+            log4j           : "2.24.1",
+            hazelcast       : "5.3.6",
+            hazelcastAll    : "4.2.8",
+            springRetry     : "2.0.8",
+            springAOP       : "3.3.3",
     ]
 
     libs = [
@@ -22,6 +26,9 @@ ext {
             springSecurityCore          : "org.springframework.security:spring-security-core:$versions.springSecurity",
             springJDBCStarter           : "org.springframework.boot:spring-boot-starter-jdbc:$versions.springBoot",
             springJDBC                  : "org.springframework.data:spring-data-jdbc:$versions.springJDBC",
+            springCache                 : "org.springframework.boot:spring-boot-starter-cache",
+            springRetry                 : "org.springframework.retry:spring-retry:$versions.springRetry",
+            springAOP                   : "org.springframework.boot:spring-boot-starter-aop:$versions.springAOP",
             //postgres
             postgresql                  : "org.postgresql:postgresql:$versions.postgresql",
             //lombok
@@ -37,6 +44,10 @@ ext {
             springBootSessionRedis      : "org.springframework.session:spring-session-data-redis:$versions.springBoot",
             //Log4j
             log4jBom                    : "org.apache.logging.log4j:log4j-bom:$versions.log4j",
-            log4jApi                    : "org.apache.logging.log4j:log4j-api:$versions.log4j"
+            log4jApi                    : "org.apache.logging.log4j:log4j-api:$versions.log4j",
+            //Hazelcast
+            hazelcast                   : "com.hazelcast:hazelcast:$versions.hazelcast",
+            hazelcastAll                : "com.hazelcast:hazelcast-all:$versions.hazelcastAll",
+            hazelcastSpring             : "com.hazelcast:hazelcast-spring:$versions.hazelcast",
     ]
 }

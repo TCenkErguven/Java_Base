@@ -1,4 +1,5 @@
 rootProject.name = 'Java_Base'
 include 'auth-service'
 include 'custom-service'
+include 'hazelcast-service'
 
