@@ -12,4 +12,6 @@ import lombok.Setter;
 public class SaveRequestDto {
     private String id;
     private String name;
+
+
 }

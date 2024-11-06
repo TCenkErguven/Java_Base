@@ -63,12 +63,8 @@ public class HazelcastService {
      */
 
 
-    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=5000, maxDelay=10000), retryFor = RuntimeException.class)
+    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = HazelCastServiceException.class)
     public SaveRequestDto save(SaveRequestDto dto) {
-        SaveRequestDto existingDto = null;
-
-        // Cache save for dto
-        existingDto = cacheService.cacheableSave(dto);
 
         /**
          * Dto will be saved by the cache first if it fails, it throws a RunTimeException
@@ -76,12 +72,24 @@ public class HazelcastService {
          * and will save the data to our DB
          */
 
-        return existingDto;
+        return cacheService.cacheableSave(dto);
     }
 
     @Recover
     public String fallbackSave(SaveRequestDto dto){
         return dbService.save(dto);
+    }
+
+    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = HazelCastServiceException.class)
+    public SaveRequestDto saveWithTTL(SaveRequestDto dto) {
+
+        /**
+         * Dto will be saved by the cache first if it fails, it throws a RunTimeException
+         * if this fail process continues 3 times in a row than @Recover will be activated
+         * and will save the data to our DB
+         */
+
+        return cacheService.hazelCastSave(dto);
     }
 
 }
