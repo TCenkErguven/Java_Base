@@ -1,6 +1,5 @@
 package org.example.service;
 
-import com.hazelcast.core.HazelcastException;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import org.example.dto.SaveRequestDto;

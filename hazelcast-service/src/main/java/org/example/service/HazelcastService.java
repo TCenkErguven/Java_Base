@@ -23,7 +23,6 @@ public class HazelcastService {
     }
 
     // #TODO Logger will be added instead of system.out and Impl file configuration will be added soon...
-    // #TODO cacheName will be get from yml properties
     // #TODO Unit test will be added
     // #TODO Integration tests will be added
     // #TODO Load tests will be added
