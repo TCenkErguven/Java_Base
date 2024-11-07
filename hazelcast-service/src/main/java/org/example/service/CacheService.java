@@ -22,7 +22,7 @@ public class CacheService {
     private final String cacheName;
     private final HazelcastInstance hazelcastInstance;
 
-    public CacheService(CacheManager cacheManager, HazelcastInstance hazelcastInstance, @Value("${cacheName}") String cacheName){
+    public CacheService(CacheManager cacheManager, HazelcastInstance hazelcastInstance, @Value("${cache.cache-name}") String cacheName){
         this.cacheManager = cacheManager;
         this.cacheName = cacheName;
         this.hazelcastInstance = hazelcastInstance;

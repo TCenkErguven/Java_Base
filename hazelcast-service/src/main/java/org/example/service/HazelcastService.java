@@ -16,7 +16,7 @@ public class HazelcastService {
     private final CacheService cacheService;
     private final String cacheName;
 
-    public HazelcastService(DBService dbService, CacheService cacheService, @Value("${cacheName}") String cacheName){
+    public HazelcastService(DBService dbService, CacheService cacheService, @Value("${cache.cache-name}") String cacheName){
         this.dbService = dbService;
         this.cacheService = cacheService;
         this.cacheName = cacheName;

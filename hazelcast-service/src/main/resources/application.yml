@@ -19,6 +19,8 @@ spring:
         multicast:
           enabled: true
 
-
-cacheName: save-dto
-cacheTTL: 30
+cache:
+  cache-name: save-dto
+  cache-ttl: 30
+  cluster-name: dev
+  network-address: localhost:5701
