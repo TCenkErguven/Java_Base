@@ -3,7 +3,7 @@ version: '3.1'
 
 
 services:
-  db:
+  postgres-db:
     container_name: postgres-base
     image: postgres
     restart: always
@@ -13,6 +13,7 @@ services:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: 1234
       PGDATA: /data/java_base
+
   redis:
     image: redis
     ports:
@@ -37,3 +38,4 @@ services:
     environment:
       - MC_DEFAULT_CLUSTER=dev
       - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast
+

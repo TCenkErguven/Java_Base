@@ -15,6 +15,7 @@ ext {
             hazelcastAll    : "4.2.8",
             springRetry     : "2.0.8",
             springAOP       : "3.3.3",
+            oracleDB        : "23.3.0.23.09",
     ]
 
     libs = [
@@ -31,6 +32,8 @@ ext {
             springAOP                   : "org.springframework.boot:spring-boot-starter-aop:$versions.springAOP",
             //postgres
             postgresql                  : "org.postgresql:postgresql:$versions.postgresql",
+            //oracleDB
+            oracleDB                    : "com.oracle.database.jdbc.ojdbc11:$versions.oracleDB",
             //lombok
             lombok                      : "org.projectlombok:lombok:$versions.lombok",
             openApi                     : "org.springdoc:springdoc-openapi-ui:$versions.openApi",

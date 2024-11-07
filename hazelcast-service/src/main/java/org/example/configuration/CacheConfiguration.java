@@ -31,6 +31,11 @@ public class CacheConfiguration {
         return new HazelcastCacheManager(createHazelcastInstance());
     }
 
+    /**
+     * This @Bean is excessive if we don't use the hazelcast's own save functions and if this
+     * case is valid @Bean annotation needed to be removed
+     * @return
+     */
     @Bean
     public HazelcastInstance createHazelcastInstance(){
        HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
