@@ -1,6 +1,6 @@
-package org.hazelcast.jdbc;
+package com.hazelcast.jdbc;
 
-import org.hazelcast.model.Custom;
+import com.hazelcast.model.Custom;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,13 +1,11 @@
-package org.hazelcast.service;
+package com.hazelcast.service;
 
-import org.hazelcast.dto.SaveRequestDto;
-import org.hazelcast.exception.ErrorType;
-import org.hazelcast.exception.HazelCastServiceException;
-import org.hazelcast.model.Custom;
-import org.hazelcast.repository.CustomRepository;
+import com.hazelcast.dto.SaveRequestDto;
+import com.hazelcast.exception.ErrorType;
+import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.model.Custom;
+import com.hazelcast.repository.CustomRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class CustomService {

@@ -1,4 +1,4 @@
-package org.hazelcast.model.base;
+package com.hazelcast.model.base;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

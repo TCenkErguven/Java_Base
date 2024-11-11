@@ -2,4 +2,7 @@ rootProject.name = 'Java_Base'
 include 'auth-service'
 include 'custom-service'
 include 'hazelcast-service'
+include 'grpc-client-service'
+include 'grpc-server-service'
+include 'grpc-server-service'
 

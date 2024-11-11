@@ -1,9 +1,9 @@
-package org.hazelcast.repository;
+package com.hazelcast.repository;
 
-import org.hazelcast.exception.ErrorType;
-import org.hazelcast.exception.HazelCastServiceException;
-import org.hazelcast.jdbc.CustomRowMapper;
-import org.hazelcast.model.Custom;
+import com.hazelcast.exception.ErrorType;
+import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.jdbc.CustomRowMapper;
+import com.hazelcast.model.Custom;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

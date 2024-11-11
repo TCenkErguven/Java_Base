@@ -1,7 +1,7 @@
-package org.hazelcast.model;
+package com.hazelcast.model;
 
 import lombok.*;
-import org.hazelcast.model.base.BaseEntity;
+import com.hazelcast.model.base.BaseEntity;
 
 import java.io.Serializable;
 

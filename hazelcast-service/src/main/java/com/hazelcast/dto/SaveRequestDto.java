@@ -1,4 +1,4 @@
-package org.hazelcast.dto;
+package com.hazelcast.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

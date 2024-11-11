@@ -1,7 +1,7 @@
-package org.hazelcast.controller;
+package com.hazelcast.controller;
 
-import org.hazelcast.dto.SaveRequestDto;
-import org.hazelcast.service.HazelcastService;
+import com.hazelcast.dto.SaveRequestDto;
+import com.hazelcast.service.HazelcastService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

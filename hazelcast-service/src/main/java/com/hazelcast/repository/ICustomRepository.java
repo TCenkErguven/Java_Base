@@ -1,4 +1,4 @@
-package org.hazelcast.repository;
+package com.hazelcast.repository;
 
 import java.util.List;
 import java.util.Optional;
