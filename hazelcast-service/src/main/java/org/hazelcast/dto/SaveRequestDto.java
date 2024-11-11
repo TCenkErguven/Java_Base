@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.hazelcast.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class SaveRequestDto {
-    private String id;
-    private String name;
-
-
+    private String uuid;
+    private String message;
 }

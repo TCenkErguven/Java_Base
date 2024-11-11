@@ -1,31 +1,22 @@
-package org.example.service;
+package org.hazelcast.service;
 
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
-import org.example.dto.SaveRequestDto;
-import org.example.exception.ErrorType;
-import org.example.exception.HazelCastServiceException;
-import org.springframework.beans.factory.annotation.Value;
+import org.hazelcast.dto.SaveRequestDto;
+import org.hazelcast.exception.ErrorType;
+import org.hazelcast.exception.HazelCastServiceException;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class CacheService {
 
     private final CacheManager cacheManager;
-    private final String cacheName;
-    private final HazelcastInstance hazelcastInstance;
+    private final CustomService customService;
 
-    public CacheService(CacheManager cacheManager, HazelcastInstance hazelcastInstance, @Value("${cache.cache-name}") String cacheName){
+    public CacheService(CacheManager cacheManager, CustomService customService){
         this.cacheManager = cacheManager;
-        this.cacheName = cacheName;
-        this.hazelcastInstance = hazelcastInstance;
+        this.customService = customService;
     }
 
     public Cache getCache(String cacheName){
@@ -43,8 +34,19 @@ public class CacheService {
      * @param dto
      * @return
      */
-    @Cacheable(value = "save-dto", key = "#dto.id", sync = true)
+    @Cacheable(value = "save-dto", key = "#dto.uuid", sync = true)
     public SaveRequestDto cacheableSave(SaveRequestDto dto) {
+        try {
+            customService.save(dto);
+            Thread.sleep(5000);
+            return dto;
+        } catch (Exception e) {
+            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+        }
+    }
+
+    @Cacheable(value = "save-dto", key = "#dto.uuid", sync = true)
+    public SaveRequestDto cacheableSaveWithDB(SaveRequestDto dto) {
         try {
             Thread.sleep(5000);
             return dto;
@@ -53,18 +55,20 @@ public class CacheService {
         }
     }
 
+    /*
     @Scheduled(fixedRate = 600000)
     @CacheEvict(value ="save-dto", allEntries = true)
     public void evictHazelCastDtoCache() {
         System.out.println("Caches cleared");
     }
-
+    */
     /**
      * This method use IMap interface from Hazelcast and put the data if
      * there is no existing value there
      * @param dto
      * @return
      */
+    /*
     public synchronized SaveRequestDto hazelCastSave(SaveRequestDto dto){
         try{
             IMap<String, SaveRequestDto> map = hazelcastInstance.getMap(cacheName);
@@ -73,7 +77,7 @@ public class CacheService {
         } catch (Exception e){
             throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
         }
-
     }
+     */
 
 }

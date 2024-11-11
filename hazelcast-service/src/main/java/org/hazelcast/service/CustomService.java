@@ -1,0 +1,48 @@
+package org.hazelcast.service;
+
+import org.hazelcast.dto.SaveRequestDto;
+import org.hazelcast.exception.ErrorType;
+import org.hazelcast.exception.HazelCastServiceException;
+import org.hazelcast.model.Custom;
+import org.hazelcast.repository.CustomRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class CustomService {
+    private final CustomRepository repository;
+
+    public CustomService(CustomRepository repository){
+        this.repository = repository;
+    }
+
+    // #TODO Mapstruct will be added
+
+
+    public SaveRequestDto save(SaveRequestDto dto){
+        try{
+            Custom custom = new Custom();
+            custom.setTransactionUUID(dto.getUuid());
+            custom.setMessage(dto.getMessage());
+            repository.save(custom);
+            System.out.println("Saved");
+            return dto;
+        }catch (Exception ex) {
+            System.out.println("Failed");
+            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+        }
+    }
+
+
+    public SaveRequestDto findByUUId(String uuid){
+        try{
+            Custom custom = repository.findByUUId(uuid)
+                    .orElseThrow(() -> new HazelCastServiceException(ErrorType.NOT_FOUND));
+            return new SaveRequestDto(custom.getTransactionUUID(),custom.getTransactionUUID());
+        }catch (Exception ex) {
+            System.out.println("Failed");
+            return null;
+        }
+    }
+}

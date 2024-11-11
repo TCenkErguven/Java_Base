@@ -1,8 +1,8 @@
-package org.example.service;
+package org.hazelcast.service;
 
-import org.example.dto.SaveRequestDto;
-import org.example.exception.ErrorType;
-import org.example.exception.HazelCastServiceException;
+import org.hazelcast.dto.SaveRequestDto;
+import org.hazelcast.exception.ErrorType;
+import org.hazelcast.exception.HazelCastServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.retry.annotation.Backoff;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HazelcastService {
-    private final DBService dbService;
+    private final CustomService customService;
     private final CacheService cacheService;
     private final String cacheName;
 
-    public HazelcastService(DBService dbService, CacheService cacheService, @Value("${cache.cache-name}") String cacheName){
-        this.dbService = dbService;
+    public HazelcastService(CustomService customService, CacheService cacheService, @Value("${cache.cache-name}") String cacheName){
+        this.customService = customService;
         this.cacheService = cacheService;
         this.cacheName = cacheName;
     }
@@ -26,6 +26,7 @@ public class HazelcastService {
     // #TODO Unit test will be added
     // #TODO Integration tests will be added
     // #TODO Load tests will be added
+    // #TODO CacheManager null ise hazelcast-client ı initialize dene
 
     public SaveRequestDto findResponseByUUID(String uuid){
         Cache cache = cacheService.getCache(cacheName);
@@ -42,7 +43,7 @@ public class HazelcastService {
 
         // DB control for dto
         if(existingDto == null){
-            existingDto = dbService.findByUUId(uuid);
+            existingDto = customService.findByUUId(uuid);
         }
 
         if( existingDto == null) {
@@ -62,33 +63,43 @@ public class HazelcastService {
      */
 
 
-    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = Exception.class)
+    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = HazelCastServiceException.class)
     public SaveRequestDto save(SaveRequestDto dto) {
-
         /**
          * Dto will be saved by the cache first if it fails, it throws a RunTimeException
          * if this fail process continues 3 times in a row than @Recover will be activated
          * and will save the data to our DB
          */
-
-        return cacheService.cacheableSave(dto);
+        try {
+            return cacheService.cacheableSave(dto);
+        } catch (Exception e) {
+            // Throw a RuntimeException or another exception to trigger retries
+            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+        }
     }
 
     @Recover
-    public String fallbackSave(SaveRequestDto dto){
-        return dbService.save(dto);
+    public SaveRequestDto fallbackSave(HazelCastServiceException e, SaveRequestDto dto){
+        return customService.save(dto);
     }
 
+    /*
     @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = HazelCastServiceException.class)
     public SaveRequestDto saveWithTTL(SaveRequestDto dto) {
-
         /**
-         * Dto will be saved by the cache first if it fails, it throws a HazelCastServiceException
+         * Dto will be saved by the cache first if it fails, it throws a Exception
          * if this fail process continues 3 times in a row than @Recover will be activated
          * and will save the data to our DB
          */
+        /*
+        try{
+            return cacheService.hazelCastSave(dto);
+        } catch(Exception e){
+            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+        }
+       }
+        */
 
-        return cacheService.hazelCastSave(dto);
-    }
+
 
 }

@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.hazelcast.exception;
 
 import lombok.*;
 import org.springframework.stereotype.Component;

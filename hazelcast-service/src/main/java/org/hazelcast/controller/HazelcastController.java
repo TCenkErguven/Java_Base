@@ -1,7 +1,7 @@
-package org.example.controller;
+package org.hazelcast.controller;
 
-import org.example.dto.SaveRequestDto;
-import org.example.service.HazelcastService;
+import org.hazelcast.dto.SaveRequestDto;
+import org.hazelcast.service.HazelcastService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +25,10 @@ public class HazelcastController {
     public ResponseEntity<SaveRequestDto> findByUUID(@PathVariable String uuid){
         return ResponseEntity.ok(service.findResponseByUUID(uuid));
     }
-
+    /*
     @PostMapping("/save/hazel")
     public ResponseEntity<SaveRequestDto> hazelCastSave(SaveRequestDto dto) {
         return ResponseEntity.ok(service.saveWithTTL(dto));
     }
+    */
 }

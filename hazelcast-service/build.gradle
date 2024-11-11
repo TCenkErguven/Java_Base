@@ -9,5 +9,6 @@ dependencies {
     implementation libs.springCache
     implementation libs.springRetry
     implementation libs.springAOP
-    implementation libs.oracleDB
+    implementation libs.springJDBC
+    implementation libs.springJDBCStarter
 }

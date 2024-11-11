@@ -1,4 +1,4 @@
-package com.java.base.reposityory.base;
+package com.java.base.repository.base;
 
 import com.java.base.utiliy.Helper;
 import org.springframework.dao.DataAccessException;

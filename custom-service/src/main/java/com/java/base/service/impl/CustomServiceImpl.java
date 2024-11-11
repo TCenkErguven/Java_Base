@@ -1,12 +1,11 @@
 package com.java.base.service.impl;
 
 import com.java.base.model.Custom;
-import com.java.base.reposityory.CustomRepository;
+import com.java.base.repository.CustomRepository;
 import com.java.base.service.CustomService;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.util.Optional;
 import java.util.UUID;
 
 

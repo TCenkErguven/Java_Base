@@ -1,8 +1,8 @@
-package com.java.base.reposityory;
+package com.java.base.repository;
 
 
 import com.java.base.model.Custom;
-import com.java.base.reposityory.base.BaseJDBCRepository;
+import com.java.base.repository.base.BaseJDBCRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
