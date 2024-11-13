@@ -53,9 +53,15 @@ ext {
             hazelcast                   : "com.hazelcast:hazelcast:$versions.hazelcast",
             hazelcastAll                : "com.hazelcast:hazelcast-all:$versions.hazelcastAll",
             hazelcastSpring             : "com.hazelcast:hazelcast-spring:$versions.hazelcast",
+            //javaxAnnotation
+            javaxAnnotation             : "javax.annotation:javax.annotation-api:1.3.2",
             //Grpc
+            grpc                        : "net.devh:grpc-spring-boot-starter:$versions.grpc",
             grpcServer                  : "net.devh:grpc-server-spring-boot-starter:$versions.grpc",
             grpcClient                  : "net.devh:grpc-client-spring-boot-starter:$versions.grpc",
-            grpcStubs                   : "com.baeldung.spring-boot-modules:helloworld-grpc-java:1.0.0-SNAPSHOT"
+            protobuf                    : "com.google.protobuf:protobuf-java:4.28.3",
+            grpcStub                    : "io.grpc:grpc-stub:1.62.2",
+            grpcStubProtobuf            : "io.grpc:grpc-protobuf:1.62.2",
+            grpcNetty                   : "io.grpc:grpc-netty-shaded:1.63.0",
     ]
 }

@@ -17,7 +17,7 @@ public class HazelcastController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<SaveRequestDto> save(SaveRequestDto dto) {
+    public ResponseEntity<SaveRequestDto> save(@RequestBody SaveRequestDto dto) {
         return ResponseEntity.ok(service.save(dto));
     }
 
@@ -27,7 +27,7 @@ public class HazelcastController {
     }
     /*
     @PostMapping("/save/hazel")
-    public ResponseEntity<SaveRequestDto> hazelCastSave(SaveRequestDto dto) {
+    public ResponseEntity<SaveRequestDto> hazelCastSave(@RequestBody SaveRequestDto dto) {
         return ResponseEntity.ok(service.saveWithTTL(dto));
     }
     */

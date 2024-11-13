@@ -37,7 +37,7 @@ public class CustomService {
         try{
             Custom custom = repository.findByUUId(uuid)
                     .orElseThrow(() -> new HazelCastServiceException(ErrorType.NOT_FOUND));
-            return new SaveRequestDto(custom.getTransactionUUID(),custom.getTransactionUUID());
+            return new SaveRequestDto(custom.getTransactionUUID(),custom.getMessage());
         }catch (Exception ex) {
             System.out.println("Failed");
             return null;

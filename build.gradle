@@ -4,6 +4,7 @@ plugins {
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'application'
+    id 'com.google.protobuf' version '0.9.4'
 }
 
 def kotlinVersion = '2.0.20'
@@ -40,8 +41,6 @@ allprojects {
 
     dependencies {
         implementation libs.springBootWeb
-    //    implementation libs.springSecurity
-    //    implementation libs.springSecurityCore
         implementation libs.springBootValidation
         implementation libs.lombok
         annotationProcessor libs.lombok
@@ -49,14 +48,17 @@ allprojects {
         implementation libs.mapStruct
         annotationProcessor libs.mapStructProcessor
         implementation libs.javaJWT
-    //    implementation libs.springBootDataRedis
-    //    implementation libs.springBootSessionRedis
         implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
         implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
         implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2"
         implementation libs.log4jBom
         implementation libs.log4jApi
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+        testImplementation "org.mockito:mockito-junit-jupiter:5.12.0"
+        testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.2"
+        testImplementation "org.mockito:mockito-core:5.11.0"
+        testImplementation 'org.junit.platform:junit-platform-commons:1.10.2'
     }
 
 }
@@ -64,5 +66,13 @@ allprojects {
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs 'src/test/java'
+        }
     }
 }

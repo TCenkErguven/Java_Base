@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/auth-service" />
             <option value="$PROJECT_DIR$/custom-service" />
             <option value="$PROJECT_DIR$/grpc-client-service" />
+            <option value="$PROJECT_DIR$/grpc-server-service" />
             <option value="$PROJECT_DIR$/hazelcast-service" />
           </set>
         </option>

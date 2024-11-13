@@ -2,8 +2,47 @@ plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'com.google.protobuf' version '0.9.4'  // Apply protobuf plugin in the gRPC service module
 }
+
 dependencies {
+    implementation libs.grpc
+    implementation libs.grpcNetty
+    implementation libs.javaxAnnotation
+    implementation libs.grpcStub
+    implementation libs.grpcStubProtobuf
+    implementation libs.protobuf
     implementation libs.grpcClient
-    implementation libs.grpcStubs
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.28.3"
+    }
+
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.68.1"
+        }
+    }
+
+    // Generate gRPC and Java classes from .proto files
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/sources/proto/main/java'  // Point to generated sources
+        }
+    }
+}
+
+// Make sure to include proto files
+tasks.named('processResources') {
+    dependsOn 'generateProto'  // Make sure Proto generation happens before processing resources
 }

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'com.google.protobuf' version '0.9.4'
 }
 dependencies {
     implementation libs.postgresql
@@ -11,4 +12,45 @@ dependencies {
     implementation libs.springAOP
     implementation libs.springJDBC
     implementation libs.springJDBCStarter
+    implementation libs.grpc
+    implementation libs.grpcServer
+    implementation libs.grpcNetty
+    implementation libs.javaxAnnotation
+    implementation libs.grpcStub
+    implementation libs.grpcStubProtobuf
+    implementation libs.protobuf
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.28.3"
+    }
+
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.68.1"
+        }
+    }
+
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/sources/proto/main/java'
+        }
+    }
+}
+
+tasks.named('processResources') {
+    dependsOn 'generateProto'
+}
+
+test {
+    useJUnitPlatform()
 }
