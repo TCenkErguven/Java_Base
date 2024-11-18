@@ -38,7 +38,6 @@ public class CacheService {
     public SaveRequestDto cacheableSave(SaveRequestDto dto) {
         try {
             customService.save(dto);
-            Thread.sleep(5000);
             return dto;
         } catch (Exception e) {
             throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
@@ -46,9 +45,8 @@ public class CacheService {
     }
 
     @Cacheable(value = "save-dto", key = "#dto.uuid", sync = true)
-    public SaveRequestDto cacheableSaveWithDB(SaveRequestDto dto) {
+    public SaveRequestDto cacheableSaveWithoutDB(SaveRequestDto dto) {
         try {
-            Thread.sleep(5000);
             return dto;
         } catch (Exception e) {
             throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);

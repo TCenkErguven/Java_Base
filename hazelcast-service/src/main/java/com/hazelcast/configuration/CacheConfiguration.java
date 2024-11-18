@@ -12,6 +12,9 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
@@ -27,12 +30,17 @@ public class CacheConfiguration {
      * This @Bean is excessive if we don't use the hazelcast's own save functions and if this
      * case is valid @Bean annotation needed to be removed
      *
-     * @return
+     * @return null or instance of Hazelcast
      */
     public HazelcastInstance createHazelcastInstance() {
-        HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
-        instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
-        return instance;
+        try{
+            HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
+            instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
+            return instance;
+        } catch (Exception e) {
+            System.out.println("Error hazelcast bean creation");
+            return null;
+        }
     }
 
     private void registerShutdownHook(HazelcastInstance instance) {

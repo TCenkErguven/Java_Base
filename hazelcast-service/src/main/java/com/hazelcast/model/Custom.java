@@ -14,4 +14,6 @@ public class Custom extends BaseEntity implements Serializable{
     private String id;
     private String message;
     private String transactionUUID;
+    @Builder.Default
+    private Boolean isProgressCompleted = false;
 }

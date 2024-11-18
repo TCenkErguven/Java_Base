@@ -67,4 +67,10 @@ public class CustomRepository implements ICustomRepository<Custom> {
         String sql = "UPDATE custom set deleted = ?, updated_by = ?, updated = ? WHERE id = ?";
         jdbcTemplate.update(sql, System.currentTimeMillis(), custom.getUpdatedBy(), custom.getUpdated(), custom.getId());
     }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM custom";
+        jdbcTemplate.update(sql);
+    }
 }

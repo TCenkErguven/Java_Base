@@ -43,4 +43,8 @@ public class CustomService {
             return null;
         }
     }
+
+    public void deleteAll(){
+        repository.deleteAll();
+    }
 }
