@@ -32,9 +32,9 @@ public class GrpcController {
         SaveRequest grpcResponse = null;
         try{
             grpcResponse = duplicateBlockingStub.saveMessage(SaveRequest.newBuilder()
-                    .setMessage(dto.getMessage())
-                    .setUuid(dto.getUuid())
-                    .build());
+                        .setMessage(dto.getMessage())
+                        .setUuid(dto.getUuid())
+                        .build());
 
         }catch (Exception e){
             System.out.println(e);
@@ -49,13 +49,14 @@ public class GrpcController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/find-by-uuid/{uuid}")
-    public ResponseEntity<SaveRequestDto> findByUUID(@PathVariable String uuid){
+    @GetMapping("/find-by-request")
+    public ResponseEntity<SaveRequestDto> findByUUID(@RequestBody SaveRequestDto dto){
         SaveRequest grpcResponse = null;
         try{
-            grpcResponse = duplicateBlockingStub.queryForMessage(QueryRequest.newBuilder()
-                    .setUuid(uuid)
-                    .build());
+                grpcResponse = duplicateBlockingStub.queryForMessage(SaveRequest.newBuilder()
+                        .setUuid(dto.getUuid())
+                        .setMessage(dto.getMessage())
+                        .build());
 
         }catch (Exception e){
             System.out.println(e);

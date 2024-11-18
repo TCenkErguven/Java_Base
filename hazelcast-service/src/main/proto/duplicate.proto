@@ -11,11 +11,8 @@ message SaveRequest {
   string message = 2;
 }
 
-message QueryRequest {
-  string uuid = 1;
-}
 
 service Duplicate {
-  rpc QueryForMessage(QueryRequest) returns (SaveRequest){}
+  rpc QueryForMessage(SaveRequest) returns (SaveRequest){}
   rpc SaveMessage(SaveRequest) returns (SaveRequest){}
 }

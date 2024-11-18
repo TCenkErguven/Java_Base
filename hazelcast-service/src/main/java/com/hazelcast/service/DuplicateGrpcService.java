@@ -2,53 +2,61 @@ package com.hazelcast.service;
 
 import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.server.proto.DuplicateGrpc;
-import com.hazelcast.server.proto.QueryRequest;
 import com.hazelcast.server.proto.SaveRequest;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.util.concurrent.ExecutorService;
+
 @GrpcService
 public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
 
     private final HazelcastService hazelcastService;
+    private final ExecutorService executorService;
 
-    public DuplicateGrpcService(HazelcastService hazelcastService){
+    public DuplicateGrpcService(HazelcastService hazelcastService,
+                                ExecutorService executorService){
         this.hazelcastService = hazelcastService;
+        this.executorService = executorService;
     }
 
     @Override
-    public void queryForMessage(QueryRequest request, StreamObserver<SaveRequest> responseObserver) {
-        SaveRequestDto existingDto = hazelcastService.findResponseByUUID(request.getUuid());
-        SaveRequest saveRequest = SaveRequest.newBuilder()
-                .setMessage(existingDto.getMessage())
-                .setUuid(existingDto.getUuid())
-                .build();
-        try{
-            responseObserver.onNext(saveRequest);
-            responseObserver.onCompleted();
-        }catch(Exception e){
-            responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from findUUID")));
-        }
-
+    public void queryForMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
+        executorService.submit(() -> {
+            try {
+                SaveRequestDto existingDto = hazelcastService.findRequestByUUID(request);
+                SaveRequest saveRequest = SaveRequest.newBuilder()
+                        .setMessage(existingDto.getMessage())
+                        .setUuid(existingDto.getUuid())
+                        .build();
+                responseObserver.onNext(saveRequest);
+                responseObserver.onCompleted();
+                System.out.println("Processing completed in virtual thread: " + Thread.currentThread());
+            } catch (Exception e) {
+                responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from findUUID")));
+            }
+        });
     }
 
     @Override
     public void saveMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
-        SaveRequestDto dto = new SaveRequestDto(request.getUuid(), request.getMessage());
-        dto = hazelcastService.save(dto);
-        SaveRequest saveRequest = SaveRequest.newBuilder()
-                .setUuid(dto.getUuid())
-                .setMessage(dto.getMessage())
-                .build();
-        try{
-            responseObserver.onNext(saveRequest);
-        }catch (Exception e){
-            responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from saveDto")));
-        }
-        responseObserver.onCompleted();
+        executorService.submit(() -> {
+            try {
+                SaveRequestDto dto = new SaveRequestDto(request.getUuid(), request.getMessage());
+                dto = hazelcastService.save(dto);
+                SaveRequest saveRequest = SaveRequest.newBuilder()
+                        .setUuid(dto.getUuid())
+                        .setMessage(dto.getMessage())
+                        .build();
+                responseObserver.onNext(saveRequest);
+            } catch (Exception e) {
+                responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from saveDto")));
+            }
+            responseObserver.onCompleted();
 
 
+        });
     }
 }

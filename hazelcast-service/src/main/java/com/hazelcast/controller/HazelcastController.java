@@ -24,10 +24,6 @@ public class HazelcastController {
         return ResponseEntity.ok(service.save(dto));
     }
 
-    @GetMapping("/find-by-uuid/{uuid}")
-    public ResponseEntity<SaveRequestDto> findByUUID(@PathVariable String uuid){
-        return ResponseEntity.ok(service.findResponseByUUID(uuid));
-    }
     /*
     @PostMapping("/save/hazel")
     public ResponseEntity<SaveRequestDto> hazelCastSave(@RequestBody SaveRequestDto dto) {

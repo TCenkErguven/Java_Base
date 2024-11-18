@@ -3,6 +3,7 @@ package com.hazelcast.service;
 import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.exception.ErrorType;
 import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.server.proto.SaveRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.retry.annotation.Backoff;
@@ -28,14 +29,14 @@ public class HazelcastService {
     // #TODO Load tests will be added
     // #TODO CacheManager null ise hazelcast-client ı initialize dene
 
-    public SaveRequestDto findResponseByUUID(String uuid){
+    public SaveRequestDto findRequestByUUID(SaveRequest request){
         Cache cache = cacheService.getCache(cacheName);
         SaveRequestDto existingDto = null;
 
         // Cache control for dto
         if(cache != null){
             try{
-                existingDto = cache.get(uuid, SaveRequestDto.class);
+                existingDto = cache.get(request.getUuid(), SaveRequestDto.class);
             } catch (Exception e) {
                 System.out.println("Cache Error");
             }
@@ -43,11 +44,11 @@ public class HazelcastService {
 
         // DB control for dto
         if(existingDto == null){
-            existingDto = customService.findByUUId(uuid);
+            existingDto = customService.findByUUIdAndReturnDto(request.getUuid());
         }
 
         if( existingDto == null) {
-            throw new HazelCastServiceException(ErrorType.NOT_FOUND);
+            existingDto = save(existingDto);
         }
 
         return existingDto;
@@ -83,22 +84,6 @@ public class HazelcastService {
         return customService.save(dto);
     }
 
-    /*
-    @Retryable(maxAttempts = 3, backoff=@Backoff(delay=100, maxDelay=1000), retryFor = HazelCastServiceException.class)
-    public SaveRequestDto saveWithTTL(SaveRequestDto dto) {
-        /**
-         * Dto will be saved by the cache first if it fails, it throws a Exception
-         * if this fail process continues 3 times in a row than @Recover will be activated
-         * and will save the data to our DB
-         */
-        /*
-        try{
-            return cacheService.hazelCastSave(dto);
-        } catch(Exception e){
-            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
-        }
-       }
-        */
 
 
 

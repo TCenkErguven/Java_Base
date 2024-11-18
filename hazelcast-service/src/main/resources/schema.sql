@@ -1,7 +1,11 @@
-create table if not exists customers (
-    id bigserial not null,
-    name varchar not null,
-    email varchar not null,
-    primary key (id),
-    UNIQUE (email)
+CREATE TABLE custom (
+    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    message VARCHAR(255),
+    transactionUUID VARCHAR(255),
+    isProgressCompleted BOOLEAN DEFAULT FALSE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BIGINT,
+    createdBy VARCHAR(255),
+    updatedBy VARCHAR(255)
 );

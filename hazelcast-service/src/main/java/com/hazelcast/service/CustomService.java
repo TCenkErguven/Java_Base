@@ -33,7 +33,7 @@ public class CustomService {
     }
 
 
-    public SaveRequestDto findByUUId(String uuid){
+    public SaveRequestDto findByUUIdAndReturnDto(String uuid){
         try{
             Custom custom = repository.findByUUId(uuid)
                     .orElseThrow(() -> new HazelCastServiceException(ErrorType.NOT_FOUND));
