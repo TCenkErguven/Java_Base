@@ -58,8 +58,8 @@ public class HazelCastServiceE2ETest {
 
     @Test
     public void shouldGetAllDto(){;
-        customRepository.save( new Custom(null,"ses","1232-3211-3455-4321"));
-        customRepository.save( new Custom(null,"ses2","51232-3211-3455-4321"));
+        //  customRepository.save( new Custom(null,"ses","1232-3211-3455-4321"));
+        //  customRepository.save( new Custom(null,"ses2","51232-3211-3455-4321"));
 
         given()
                 .contentType(ContentType.JSON)

@@ -25,32 +25,13 @@ public class CacheConfiguration {
     }
 
 
-
-    /**
-     * This @Bean is excessive if we don't use the hazelcast's own save functions and if this
-     * case is valid @Bean annotation needed to be removed
-     *
-     * @return null or instance of Hazelcast
-     */
     public HazelcastInstance createHazelcastInstance() {
-        try{
-            HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
-            instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
-            return instance;
-        } catch (Exception e) {
-            System.out.println("Error hazelcast bean creation");
-            return null;
-        }
+        HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
+        instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
+        return instance;
     }
 
-    private void registerShutdownHook(HazelcastInstance instance) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (instance != null && instance.getLifecycleService().isRunning()) {
-                System.out.println("Shutting down Hazelcast client...");
-                instance.shutdown();
-            }
-        }));
-    }
+
 
     private ClientConfig createClientConfig(){
         ClientConfig clientConfig = new ClientConfig();
