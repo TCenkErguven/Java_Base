@@ -17,10 +17,7 @@ public class JdbcCacheManager implements CacheManager {
 
     @Override
     public Cache getCache(@NotNull String name) {
-        IMap<String, Object> map = hazelcastInstance.getMap(name);
-        // Return the cache by name, or create it if it doesn't exist
-
-        return new HazelcastCache(map);
+        return new HazelcastCache(hazelcastInstance);
     }
 
     @Override
