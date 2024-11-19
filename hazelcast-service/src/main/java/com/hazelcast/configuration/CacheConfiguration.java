@@ -6,14 +6,11 @@ import com.hazelcast.client.config.ClientConnectionStrategyConfig;
 import com.hazelcast.client.config.ConnectionRetryConfig;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.spring.cache.HazelcastCacheManager;
+import com.hazelcast.cache.JdbcCacheManager;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Configuration
 @EnableCaching
@@ -21,34 +18,20 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        return new HazelcastCacheManager(createHazelcastInstance());
+        return new JdbcCacheManager(createHazelcastInstance());
     }
 
     /**
      * This @Bean is excessive if we don't use the hazelcast's own save functions and if this
      * case is valid @Bean annotation needed to be removed
-     *
-     * @return null or instance of Hazelcast
      */
     public HazelcastInstance createHazelcastInstance() {
-        try{
             HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
             instance.getConfig().addMapConfig(new MapConfig("custom-entity").setTimeToLiveSeconds(15));
             return instance;
-        } catch (Exception e) {
-            System.out.println("Error hazelcast bean creation");
-            return null;
-        }
     }
 
-    private void registerShutdownHook(HazelcastInstance instance) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (instance != null && instance.getLifecycleService().isRunning()) {
-                System.out.println("Shutting down Hazelcast client...");
-                instance.shutdown();
-            }
-        }));
-    }
+
 
     private ClientConfig createClientConfig(){
         ClientConfig clientConfig = new ClientConfig();
