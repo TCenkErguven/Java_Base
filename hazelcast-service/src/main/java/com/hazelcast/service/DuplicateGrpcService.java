@@ -26,12 +26,9 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
     public void queryForMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
         executorService.submit(() -> {
             try {
-                SaveRequestDto existingDto = hazelcastService.findRequestByUUID(request);
-                SaveRequest saveRequest = SaveRequest.newBuilder()
-                        .setMessage(existingDto.getMessage())
-                        .setUuid(existingDto.getUuid())
-                        .build();
-                responseObserver.onNext(saveRequest);
+                hazelcastService.validateRequestUUID(request);
+                //#TODO status return will be fixed for responses and response entity will be fixed
+                responseObserver.onNext(request);
                 responseObserver.onCompleted();
                 System.out.println("Processing completed in virtual thread: " + Thread.currentThread());
             } catch (Exception e) {
@@ -44,17 +41,13 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
     public void saveMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
         executorService.submit(() -> {
             try {
-                SaveRequestDto dto = new SaveRequestDto(request.getUuid(), request.getMessage());
-                dto = hazelcastService.save(dto);
-                SaveRequest saveRequest = SaveRequest.newBuilder()
-                        .setUuid(dto.getUuid())
-                        .setMessage(dto.getMessage())
-                        .build();
-                responseObserver.onNext(saveRequest);
+                hazelcastService.update(request);
+                //#TODO status return will be fixed for responses and response entity will be fixed
+                responseObserver.onNext(request);
+                responseObserver.onCompleted();
             } catch (Exception e) {
                 responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from saveDto")));
             }
-            responseObserver.onCompleted();
 
 
         });

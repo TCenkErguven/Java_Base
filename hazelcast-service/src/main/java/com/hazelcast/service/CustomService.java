@@ -1,8 +1,8 @@
 package com.hazelcast.service;
 
-import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.exception.ErrorType;
-import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.exception.HazelCastServiceSaveException;
+import com.hazelcast.exception.HazelCastServiceUpdateException;
 import com.hazelcast.model.Custom;
 import com.hazelcast.repository.CustomRepository;
 import org.springframework.stereotype.Service;
@@ -18,29 +18,37 @@ public class CustomService {
     // #TODO Mapstruct will be added
 
 
-    public SaveRequestDto save(SaveRequestDto dto){
+    public Custom save(Custom custom){
         try{
-            Custom custom = new Custom();
-            custom.setTransactionUUID(dto.getUuid());
-            custom.setMessage(dto.getMessage());
             repository.save(custom);
             System.out.println("Saved");
-            return dto;
+            return custom;
         }catch (Exception ex) {
-            System.out.println("Failed");
-            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+            System.out.println("Failed Save");
+            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
     }
 
 
-    public SaveRequestDto findByUUIdAndReturnDto(String uuid){
+    public Custom findByUUIdAndReturnDto(String uuid){
         try{
-            Custom custom = repository.findByUUId(uuid)
-                    .orElseThrow(() -> new HazelCastServiceException(ErrorType.NOT_FOUND));
-            return new SaveRequestDto(custom.getTransactionUUID(),custom.getMessage());
+            return repository.findByUUId(uuid)
+                    .orElseThrow(() -> new HazelCastServiceSaveException(ErrorType.NOT_FOUND));
         }catch (Exception ex) {
             System.out.println("Failed");
             return null;
+        }
+    }
+
+    public Custom update(Custom custom){
+        try{
+            custom.setIsProgressCompleted(true);
+            repository.update(custom);
+            System.out.println("Update");
+            return custom;
+        }catch (Exception ex){
+            System.out.println("Failed Update");
+            throw new HazelCastServiceUpdateException(ErrorType.INTERNAL_ERROR);
         }
     }
 

@@ -24,8 +24,6 @@ public class CacheConfiguration {
         return new HazelcastCacheManager(createHazelcastInstance());
     }
 
-
-
     /**
      * This @Bean is excessive if we don't use the hazelcast's own save functions and if this
      * case is valid @Bean annotation needed to be removed
@@ -35,7 +33,7 @@ public class CacheConfiguration {
     public HazelcastInstance createHazelcastInstance() {
         try{
             HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
-            instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
+            instance.getConfig().addMapConfig(new MapConfig("custom-entity").setTimeToLiveSeconds(15));
             return instance;
         } catch (Exception e) {
             System.out.println("Error hazelcast bean creation");

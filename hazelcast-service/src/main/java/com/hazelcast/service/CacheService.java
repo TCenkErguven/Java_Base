@@ -1,10 +1,11 @@
 package com.hazelcast.service;
 
-import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.exception.ErrorType;
-import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.exception.HazelCastServiceSaveException;
+import com.hazelcast.model.Custom;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -31,25 +32,26 @@ public class CacheService {
     /**
      * Saves data with spring cacheManger without TTL because Spring cache manager
      * doesn't have any TTL configuration entities
-     * @param dto
+     * @param custom
      * @return
      */
-    @Cacheable(value = "save-dto", key = "#dto.uuid", sync = true)
-    public SaveRequestDto cacheableSave(SaveRequestDto dto) {
+    @Cacheable(value = "custom-entity", key = "#custom.transactionUUID", sync = true)
+    public Custom cacheableSave(Custom custom) {
         try {
-            customService.save(dto);
-            return dto;
+            customService.save(custom);
+            return custom;
         } catch (Exception e) {
-            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
     }
 
-    @Cacheable(value = "save-dto", key = "#dto.uuid", sync = true)
-    public SaveRequestDto cacheableSaveWithoutDB(SaveRequestDto dto) {
+    @CachePut(value = "custom-entity", key = "#custom.transactionUUID")
+    public synchronized Custom cacheableUpdate(Custom custom){
         try {
-            return dto;
+            customService.update(custom);
+            return custom;
         } catch (Exception e) {
-            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
+            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
     }
 

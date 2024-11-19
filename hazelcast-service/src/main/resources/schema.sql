@@ -1,11 +1,11 @@
 CREATE TABLE custom (
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     message VARCHAR(255),
-    transactionUUID VARCHAR(255),
-    isProgressCompleted BOOLEAN DEFAULT FALSE,
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    transaction_uuid UUID,
+    is_progress_completed BOOLEAN DEFAULT FALSE,
+    created BIGINT DEFAULT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::BIGINT,
+    updated BIGINT DEFAULT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::BIGINT,
     deleted BIGINT,
-    createdBy VARCHAR(255),
-    updatedBy VARCHAR(255)
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255)
 );

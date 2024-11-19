@@ -2,8 +2,7 @@ package com.hazelcast.service;
 
 import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.exception.ErrorType;
-import com.hazelcast.exception.HazelCastServiceException;
-import org.junit.jupiter.api.Assertions;
+import com.hazelcast.exception.HazelCastServiceSaveException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,7 +57,7 @@ public class HazelCastServiceTest {
         Cache mockCache = mock(Cache.class);
 
         Mockito.when(cacheService.getCache(cacheName)).thenReturn(mockCache);
-        Mockito.when(mockCache.get("uuid", SaveRequestDto.class)).thenThrow(new HazelCastServiceException(ErrorType.NOT_FOUND));
+        Mockito.when(mockCache.get("uuid", SaveRequestDto.class)).thenThrow(new HazelCastServiceSaveException(ErrorType.NOT_FOUND));
         /*
         Mockito.when(customService.findByUUId("uuid")).thenReturn(null);
 

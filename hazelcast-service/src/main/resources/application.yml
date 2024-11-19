@@ -24,7 +24,7 @@ grpc:
     port: 9075
 
 cache:
-  cache-name: save-dto
+  cache-name: custom-entity
   cache-ttl: 30
   cluster-name: dev
   network-address: localhost:5701

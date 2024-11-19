@@ -12,7 +12,7 @@ public class CustomRowMapper implements RowMapper<Custom> {
         Custom custom = new Custom();
         custom.setId(rs.getString("id"));
         custom.setMessage(rs.getString("message"));
-        custom.setTransactionUUID(rs.getString("transactional_uuid"));
+        custom.setTransactionUUID(rs.getString("transaction_uuid"));
         return custom;
     }
 }

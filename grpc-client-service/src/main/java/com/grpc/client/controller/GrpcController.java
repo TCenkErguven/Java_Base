@@ -49,7 +49,7 @@ public class GrpcController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/find-by-request")
+    @PostMapping("/find-by-request")
     public ResponseEntity<SaveRequestDto> findByUUID(@RequestBody SaveRequestDto dto){
         SaveRequest grpcResponse = null;
         try{
