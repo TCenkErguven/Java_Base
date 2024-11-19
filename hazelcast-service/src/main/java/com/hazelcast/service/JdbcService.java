@@ -8,10 +8,10 @@ import com.hazelcast.repository.CustomRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomService {
+public class JdbcService {
     private final CustomRepository repository;
 
-    public CustomService(CustomRepository repository){
+    public JdbcService(CustomRepository repository){
         this.repository = repository;
     }
 
@@ -30,7 +30,7 @@ public class CustomService {
     }
 
 
-    public Custom findByUUIdAndReturnDto(String uuid){
+    public Custom findByUUId(String uuid){
         try{
             return repository.findByUUId(uuid)
                     .orElseThrow(() -> new HazelCastServiceSaveException(ErrorType.NOT_FOUND));

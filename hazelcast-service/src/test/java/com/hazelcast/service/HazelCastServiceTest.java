@@ -28,7 +28,7 @@ public class HazelCastServiceTest {
     CacheService cacheService;
 
     @Mock
-    CustomService customService;
+    JdbcService customService;
 
     @Value("${cache.cache-name}")
     String cacheName;

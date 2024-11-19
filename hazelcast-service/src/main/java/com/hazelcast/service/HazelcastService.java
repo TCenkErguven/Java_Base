@@ -1,27 +1,17 @@
 package com.hazelcast.service;
 
-import com.hazelcast.exception.ErrorType;
-import com.hazelcast.exception.HazelCastServiceSaveException;
-import com.hazelcast.exception.HazelCastServiceUpdateException;
 import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.SaveRequest;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HazelcastService {
-    private final CustomService customService;
+    private final JdbcService jdbcService;
     private final CacheService cacheService;
-    private final String cacheName;
 
-    public HazelcastService(CustomService customService, CacheService cacheService, @Value("${cache.cache-name}") String cacheName) {
-        this.customService = customService;
+    public HazelcastService(JdbcService jdbcService, CacheService cacheService) {
+        this.jdbcService = jdbcService;
         this.cacheService = cacheService;
-        this.cacheName = cacheName;
     }
 
     // #TODO Logger will be added instead of system.out and Impl file configuration will be added soon...
@@ -43,74 +33,44 @@ public class HazelcastService {
 
 
     public Custom findByTransactionalUUID(String uuid) throws InterruptedException {
-        Custom existingCustom = null;
-        Cache cache = cacheService.getCache(cacheName);
-        // Cache control for dto
-        if (cache != null) {
-            try {
-                existingCustom = cache.get(uuid, Custom.class);
-            } catch (Exception e) {
-                System.out.println("Cache Error");
-            }
+
+        Custom custom = null;
+        try{
+            custom = cacheService.cacheableFindByUUID(uuid);
+        }catch (Exception e){
+            custom = jdbcService.findByUUId(uuid);
         }
 
-        // DB control for dto
-        if (existingCustom == null) {
-            existingCustom = customService.findByUUIdAndReturnDto(uuid);
-        }
-
-        if (existingCustom != null && !existingCustom.getIsProgressCompleted()){
-            Thread.sleep(1000);
+        if (custom != null && !custom.getIsProgressCompleted()){
+            Thread.sleep(100);
             findByTransactionalUUID(uuid);
         }
 
-        return existingCustom;
+        return custom;
     }
 
 
-    /**
-     * Save method has a @Retryable mechanism and @Recover mechanism
-     * in case if caching fails. Fallback situation let it save on the
-     * DB which fallback requests will be saved.
-     *
-     * @param custom
-     * @return
-     */
 
-
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 100, maxDelay = 1000), retryFor = HazelCastServiceSaveException.class)
-    public Custom save(Custom custom) {
-        /**
-         * Dto will be saved by the cache first if it fails, it throws a RunTimeException
-         * if this fail process continues 3 times in a row than @Recover will be activated
-         * and will save the data to our DB
-         */
+    public void save(Custom custom) {
         try {
-            return cacheService.cacheableSave(custom);
+            cacheService.cacheableSave(custom);
         } catch (Exception e) {
-            // Throw a RuntimeException or another exception to trigger retries
-            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
+            jdbcService.save(custom);
         }
     }
 
-    @Recover
-    public Custom fallbackSave(HazelCastServiceSaveException e, Custom custom) {
-        return customService.save(custom);
-    }
-
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 100, maxDelay = 1000), retryFor = HazelCastServiceUpdateException.class)
-    public Custom update(SaveRequest request) {
+    public void update(SaveRequest request) {
         try {
-            Custom custom = findByTransactionalUUID(request.getUuid());
-            return cacheService.cacheableUpdate(custom);
+            Custom custom = cacheService.cacheableFindByUUID(request.getUuid());
+            custom.setMessage(request.getMessage());
+            cacheService.cacheableUpdate(custom);
         } catch (Exception e) {
-            throw new HazelCastServiceUpdateException(ErrorType.INTERNAL_ERROR);
+            Custom custom = jdbcService.findByUUId(request.getUuid());
+            custom.setMessage(request.getMessage());
+            jdbcService.update(custom);
         }
     }
 
-    @Recover
-    public Custom fallbackUpdate(HazelCastServiceUpdateException e, Custom custom) {
-        return customService.update(custom);
-    }
+
 
 }

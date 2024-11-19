@@ -1,14 +1,11 @@
 package com.hazelcast.service;
 
-import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.server.proto.DuplicateGrpc;
 import com.hazelcast.server.proto.SaveRequest;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
-
-import java.util.concurrent.ExecutorService;
 
 @GrpcService
 public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {

@@ -1,9 +1,7 @@
 package com.hazelcast.controller;
 
-import com.hazelcast.dto.SaveRequestDto;
-import com.hazelcast.service.CustomService;
+import com.hazelcast.service.JdbcService;
 import com.hazelcast.service.HazelcastService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 public class HazelcastController {
 
     private final HazelcastService service;
-    private final CustomService customService;
+    private final JdbcService customService;
 
-    public HazelcastController(HazelcastService service, CustomService customService){
+    public HazelcastController(HazelcastService service, JdbcService customService){
         this.service = service;
         this.customService = customService;
     }

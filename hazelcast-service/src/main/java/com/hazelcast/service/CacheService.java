@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class CacheService {
 
     private final CacheManager cacheManager;
-    private final CustomService customService;
+    private final JdbcService customService;
 
-    public CacheService(CacheManager cacheManager, CustomService customService){
+    public CacheService(CacheManager cacheManager, JdbcService customService){
         this.cacheManager = cacheManager;
         this.customService = customService;
     }
@@ -35,12 +35,20 @@ public class CacheService {
      * @param custom
      * @return
      */
-    @Cacheable(value = "custom-entity", key = "#custom.transactionUUID", sync = true)
+    @Cacheable(value = "custom-entity", key = "#custom.transactionUUID")
     public Custom cacheableSave(Custom custom) {
         try {
-            customService.save(custom);
-            return custom;
+            return customService.save(custom);
         } catch (Exception e) {
+            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
+        }
+    }
+
+    @Cacheable(value = "custom-entity", key = "#custom.transactionUUID")
+    public Custom cacheableFindByUUID(String uuid){
+        try{
+            return customService.findByUUId(uuid);
+        }catch (Exception e){
             throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
     }
@@ -54,30 +62,5 @@ public class CacheService {
             throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
     }
-
-    /*
-    @Scheduled(fixedRate = 600000)
-    @CacheEvict(value ="save-dto", allEntries = true)
-    public void evictHazelCastDtoCache() {
-        System.out.println("Caches cleared");
-    }
-    */
-    /**
-     * This method use IMap interface from Hazelcast and put the data if
-     * there is no existing value there
-     * @param dto
-     * @return
-     */
-    /*
-    public synchronized SaveRequestDto hazelCastSave(SaveRequestDto dto){
-        try{
-            IMap<String, SaveRequestDto> map = hazelcastInstance.getMap(cacheName);
-            map.putIfAbsent(dto.getId(),dto,10000, TimeUnit.SECONDS);
-            return dto;
-        } catch (Exception e){
-            throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
-        }
-    }
-     */
 
 }
