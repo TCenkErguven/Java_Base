@@ -1,8 +1,6 @@
 package com.hazelcast.service;
 
 import com.hazelcast.server.proto.*;
-import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
