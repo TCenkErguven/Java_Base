@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.kotlin.com.google.gson.JsonObject;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class SaveRequestDto {
-    private String uuid;
-    private Object message;
+public class FindByUUIDResponseDto {
+    private String errorMessage;
+    private Boolean status;
+    private Integer code;
 }

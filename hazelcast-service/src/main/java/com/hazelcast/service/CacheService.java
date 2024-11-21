@@ -44,7 +44,7 @@ public class CacheService {
         }
     }
 
-    @Cacheable(value = "custom-entity", key = "#custom.transactionUUID")
+    @Cacheable(value = "custom-entity", key = "#uuid")
     public Custom cacheableFindByUUID(String uuid){
         try{
             return customService.findByUUId(uuid);
@@ -54,7 +54,7 @@ public class CacheService {
     }
 
     @CachePut(value = "custom-entity", key = "#custom.transactionUUID")
-    public synchronized Custom cacheableUpdate(Custom custom){
+    public Custom cacheableUpdate(Custom custom){
         try {
             customService.update(custom);
             return custom;

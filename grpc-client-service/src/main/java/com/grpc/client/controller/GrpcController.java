@@ -1,7 +1,14 @@
 package com.grpc.client.controller;
 
+import com.grpc.client.dto.FindByUUIDResponseDto;
 import com.grpc.client.dto.SaveRequestDto;
+import com.grpc.client.dto.SaveResponseDto;
 import com.grpc.client.proto.*;
+import com.grpc.client.service.GrpcService;
+import com.hazelcast.server.proto.DuplicateGrpc;
+import com.hazelcast.server.proto.ResponseObject;
+import com.hazelcast.server.proto.ResponseWrapper;
+import com.hazelcast.server.proto.SaveRequest;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +23,12 @@ public class GrpcController {
     @GrpcClient("duplicateService")
     private DuplicateGrpc.DuplicateBlockingStub duplicateBlockingStub;
 
+    private final GrpcService grpcService;
+
+    public GrpcController(GrpcService grpcService) {
+        this.grpcService = grpcService;
+    }
+
     @PostMapping("/hello")
     public ResponseEntity<String> sayHello() {
         HelloWorldResponse response = null;
@@ -28,47 +41,13 @@ public class GrpcController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<SaveRequestDto> save(@RequestBody SaveRequestDto dto) {
-        SaveRequest grpcResponse = null;
-        try{
-            grpcResponse = duplicateBlockingStub.saveMessage(SaveRequest.newBuilder()
-                        .setMessage(dto.getMessage())
-                        .setUuid(dto.getUuid())
-                        .build());
-
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        SaveRequestDto response = new SaveRequestDto();
-        if(grpcResponse != null){
-            response.setMessage(grpcResponse.getMessage());
-            response.setUuid(grpcResponse.getUuid());
-        }
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<SaveResponseDto> save(@RequestBody SaveRequestDto dto) {
+        return ResponseEntity.ok(grpcService.save(dto));
     }
 
-    @PostMapping("/find-by-request")
-    public ResponseEntity<SaveRequestDto> findByUUID(@RequestBody SaveRequestDto dto){
-        SaveRequest grpcResponse = null;
-        try{
-                grpcResponse = duplicateBlockingStub.queryForMessage(SaveRequest.newBuilder()
-                        .setUuid(dto.getUuid())
-                        .setMessage(dto.getMessage())
-                        .build());
-
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        SaveRequestDto response = new SaveRequestDto();
-        if(grpcResponse != null){
-            response.setMessage(grpcResponse.getMessage());
-            response.setUuid(grpcResponse.getUuid());
-        }
-
-        return ResponseEntity.ok(response);
+    @PostMapping("/find-by-request/{uuid}")
+    public ResponseEntity<FindByUUIDResponseDto> findByUUID(@PathVariable String uuid){
+        return ResponseEntity.ok(grpcService.findByUUID(uuid));
     }
 
 

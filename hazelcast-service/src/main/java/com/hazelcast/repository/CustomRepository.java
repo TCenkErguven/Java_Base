@@ -53,14 +53,14 @@ public class CustomRepository implements ICustomRepository<Custom> {
 
     @Override
     public void save(Custom custom) {
-        String sql = "INSERT INTO custom (message, transaction_uuid, created_by, updated_by, created, updated) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO custom (message, transaction_uuid, created_by, updated_by, created, updated) VALUES (?:: jsonb, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, custom.getMessage(), custom.getTransactionUUID(), custom.getCreatedBy(), custom.getUpdatedBy(), custom.getCreated(), custom.getUpdated());
     }
 
     @Override
     public void update(Custom custom) {
-        String sql = "UPDATE custom set message = ?, transaction_uuid = ?, updated_by = ?, updated = ? WHERE id = ?";
-        jdbcTemplate.update(sql, custom.getMessage(), custom.getTransactionUUID(), custom.getUpdatedBy(), custom.getUpdated(), custom.getId());
+        String sql = "UPDATE custom set message = ?::jsonb, updated = ? WHERE transaction_uuid = ?";
+        jdbcTemplate.update(sql, custom.getMessage(), custom.getUpdated(), custom.getTransactionUUID());
     }
 
     @Override

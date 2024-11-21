@@ -11,7 +11,7 @@ public class CustomRowMapper implements RowMapper<Custom> {
     public Custom mapRow(ResultSet rs, int rowNum) throws SQLException {
         Custom custom = new Custom();
         custom.setId(rs.getString("id"));
-        custom.setMessage(rs.getString("message"));
+        custom.setMessage(rs.getObject("message"));
         custom.setTransactionUUID(rs.getString("transaction_uuid"));
         return custom;
     }

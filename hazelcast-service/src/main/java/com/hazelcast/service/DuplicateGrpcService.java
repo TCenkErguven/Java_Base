@@ -1,7 +1,6 @@
 package com.hazelcast.service;
 
-import com.hazelcast.server.proto.DuplicateGrpc;
-import com.hazelcast.server.proto.SaveRequest;
+import com.hazelcast.server.proto.*;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -17,27 +16,50 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
     }
 
     @Override
-    public void queryForMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
-            try {
-                hazelcastService.validateRequestUUID(request);
-                //#TODO status return will be fixed for responses and response entity will be fixed
-                responseObserver.onNext(request);
-                responseObserver.onCompleted();
-                System.out.println("Processing completed in virtual thread: " + Thread.currentThread());
-            } catch (Exception e) {
-                responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from findUUID")));
-            };
+    public void saveMessage(SaveRequest request, StreamObserver<ResponseWrapper> responseObserver) {
+        try {
+            hazelcastService.update(request);
+            //#TODO status return will be fixed for responses and response entity will be fixed
+            responseObserver.onNext(ResponseWrapper
+                    .newBuilder()
+                    .putAllSavedJsonMessage(request.getMessageMap())
+                    .setStatus(ResponseObject
+                            .newBuilder()
+                            .setCode(200)
+                            .setStatus(true)).build());
+        } catch (Exception e) {
+            responseObserver.onNext(ResponseWrapper
+                    .newBuilder()
+                    .setStatus(ResponseObject
+                            .newBuilder()
+                            .setMessage("Error incoming, take cover it from update")
+                            .setCode(200)
+                            .setStatus(true)).build());
+        };
+        responseObserver.onCompleted();
     }
 
     @Override
-    public void saveMessage(SaveRequest request, StreamObserver<SaveRequest> responseObserver) {
-            try {
-                hazelcastService.update(request);
-                //#TODO status return will be fixed for responses and response entity will be fixed
-                responseObserver.onNext(request);
-                responseObserver.onCompleted();
-            } catch (Exception e) {
-                responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT.withDescription("Error incoming, take cover it from saveDto")));
-            };
+    public void queryForMessage(FindUUIDRequest request, StreamObserver<ResponseWrapper> responseObserver) {
+        try {
+            hazelcastService.validateRequestUUID(request);
+            //#TODO status return will be fixed for responses and response entity will be fixed
+            responseObserver.onNext(ResponseWrapper
+                    .newBuilder()
+                    .setStatus(ResponseObject
+                            .newBuilder()
+                            .setCode(200)
+                            .setStatus(true)).build());
+        } catch (Exception e) {
+            responseObserver.onNext(ResponseWrapper
+                    .newBuilder()
+                    .setStatus(ResponseObject
+                            .newBuilder()
+                            .setMessage("Error incoming, take cover it from findUUID")
+                            .setCode(200)
+                            .setStatus(true)).build());
+        };
+        responseObserver.onCompleted();
     }
+
 }
