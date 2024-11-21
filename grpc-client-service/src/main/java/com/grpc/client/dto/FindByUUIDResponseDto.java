@@ -10,6 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class FindByUUIDResponseDto {
+    private String uuid;
+    private String message;
     private String errorMessage;
     private Boolean status;
     private Integer code;

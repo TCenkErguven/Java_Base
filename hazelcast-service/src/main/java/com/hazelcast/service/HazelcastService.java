@@ -1,6 +1,7 @@
 package com.hazelcast.service;
 
 import com.hazelcast.exception.ErrorType;
+import com.hazelcast.exception.HazelCastServiceSaveException;
 import com.hazelcast.exception.HazelCastServiceUpdateException;
 import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.FindUUIDRequest;
@@ -23,33 +24,14 @@ public class HazelcastService {
     // #TODO Load tests will be added
     // #TODO CacheManager null ise hazelcast-client ı initialize dene
 
-    public void validateRequestUUID(FindUUIDRequest request) throws InterruptedException {
-        Custom existingCustom = findByTransactionalUUID(request.getUuid());
-
-        if (existingCustom == null) {
-            Custom custom = new Custom();
-            custom.setTransactionUUID(request.getUuid());
-            save(custom);
-        }
-    }
-
-
-    public Custom findByTransactionalUUID(String uuid) throws InterruptedException {
-
-        Custom custom = null;
+    public Custom validateRequestUUID(FindUUIDRequest request) {
+        Custom existingCustom = null;
         try{
-            //#TODO Cachede null kaydetme sorununu düzelt hata alınmasın burda tekrardan catche giriyor.
-            custom = cacheService.cacheableFindByUUID(uuid);
+            existingCustom = cacheService.cacheableFindByUUID(request.getUuid());
         }catch (Exception e){
-            custom = jdbcService.findByUUId(uuid);
+            System.out.println(e);
         }
-
-        if (custom != null && !custom.getIsProgressCompleted()){
-            Thread.sleep(100);
-            findByTransactionalUUID(uuid);
-        }
-
-        return custom;
+        return existingCustom;
     }
 
 
@@ -58,7 +40,7 @@ public class HazelcastService {
         try {
             custom = cacheService.cacheableSave(custom);
         } catch (Exception e) {
-            custom = jdbcService.save(custom);
+            throw new HazelCastServiceSaveException(ErrorType.INTERNAL_ERROR);
         }
         return custom;
     }
@@ -67,12 +49,10 @@ public class HazelcastService {
         Custom custom = null;
         try {
             custom = cacheService.cacheableFindByUUID(request.getUuid());
-            custom.setMessage(request.getMessageMap());
+            custom.setMessage(request.getCustom());
             cacheService.cacheableUpdate(custom);
         } catch (Exception e) {
-            custom = jdbcService.findByUUId(request.getUuid());
-            custom.setMessage(request.getMessageMap());
-            jdbcService.update(custom);
+            throw new HazelCastServiceUpdateException(ErrorType.INTERNAL_ERROR);
         }
         return custom;
     }

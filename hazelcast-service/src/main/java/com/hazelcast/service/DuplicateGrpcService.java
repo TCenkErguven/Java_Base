@@ -1,5 +1,6 @@
 package com.hazelcast.service;
 
+import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -20,7 +21,6 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
             //#TODO status return will be fixed for responses and response entity will be fixed
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()
-                    .putAllSavedJsonMessage(request.getMessageMap())
                     .setStatus(ResponseObject
                             .newBuilder()
                             .setCode(200)
@@ -40,20 +40,30 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
     @Override
     public void queryForMessage(FindUUIDRequest request, StreamObserver<ResponseWrapper> responseObserver) {
         try {
-            hazelcastService.validateRequestUUID(request);
-            //#TODO status return will be fixed for responses and response entity will be fixed
+            Custom custom = hazelcastService.validateRequestUUID(request);
+            Struct.Builder structBuilder = Struct.newBuilder();
+            //#TODO JSONFORMAT dependency will be added
+            // JsonFormat.parser().ignoringUnknownFields().merge(json, structBuilder);
+
+
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()
+                    .setCustom(CustomResponse
+                            .newBuilder()
+                            .setUuid(custom.getTransactionUUID())
+                            .setTransactionMessage(custom.getMessage().toString())
+                            .build())
                     .setStatus(ResponseObject
                             .newBuilder()
                             .setCode(200)
-                            .setStatus(true)).build());
+                            .setStatus(true)
+                            ).build());
         } catch (Exception e) {
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()
                     .setStatus(ResponseObject
                             .newBuilder()
-                            .setMessage("Error incoming, take cover it from findUUID")
+                            .setMessage(e.getMessage())
                             .setCode(200)
                             .setStatus(true)).build());
         };

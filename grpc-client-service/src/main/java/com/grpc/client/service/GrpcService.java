@@ -22,18 +22,17 @@ public class GrpcService {
 
         ResponseWrapper grpcResponse = null;
         try{
+            //#TODO duruma göre struct yapıp ekleme yapılacak
             grpcResponse = duplicateBlockingStub.saveMessage(SaveRequest.newBuilder()
                     .setUuid(dto.getUuid())
-                    .putAllMessage(GrpcHelper.prepareStruct())
                     .build());
         }catch (Exception e){
             System.out.println(e);
         }
 
         SaveResponseDto response = new SaveResponseDto();
+
         if(grpcResponse != null) {
-            response.setUuid(dto.getUuid());
-            response.setMessage(GrpcHelper.convertMapStructToObject(grpcResponse.getSavedJsonMessageMap()));
             response.setCode(grpcResponse.getStatus().getCode());
             response.setStatus(grpcResponse.getStatus().getStatus());
             response.setErrorMessage(grpcResponse.getStatus().getMessage());
@@ -57,6 +56,8 @@ public class GrpcService {
             response.setCode(grpcResponse.getStatus().getCode());
             response.setStatus(grpcResponse.getStatus().getStatus());
             response.setErrorMessage(grpcResponse.getStatus().getMessage());
+            response.setUuid(grpcResponse.getCustom().getUuid());
+            response.setMessage(grpcResponse.getCustom().getTransactionMessage());
         }
         return response;
     }

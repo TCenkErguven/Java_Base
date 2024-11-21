@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SaveResponseDto {
     private String uuid;
-    private Map message;
+    private String message;
     private int code;
     private boolean status;
     private String errorMessage;

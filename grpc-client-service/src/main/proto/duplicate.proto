@@ -12,18 +12,23 @@ message FindUUIDRequest {
 
 message SaveRequest {
   string uuid = 1;
-  map<string, Value> message = 2;
+  CustomResponse custom = 2;
 }
 
 message ResponseWrapper {
   ResponseObject status = 1;
-  map<string, Value> savedJsonMessage = 2;
+  CustomResponse custom = 2;
 }
 
 message ResponseObject {
   int32 code = 1;
   bool status = 2;
   string message = 3;
+}
+
+message CustomResponse {
+  string uuid = 1;
+  string transactionMessage = 2;
 }
 
 message Value {
@@ -51,6 +56,6 @@ message Struct {
 
 
 service Duplicate {
-    rpc QueryForMessage(FindUUIDRequest) returns (ResponseWrapper){}
+  rpc QueryForMessage(FindUUIDRequest) returns (ResponseWrapper){}
   rpc SaveMessage(SaveRequest) returns (ResponseWrapper){}
 }
