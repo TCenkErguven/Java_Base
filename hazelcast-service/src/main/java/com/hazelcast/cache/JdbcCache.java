@@ -36,15 +36,15 @@ public class JdbcCache implements Cache {
     }
 
     @Override
-    public <T> T get(Object key, Class<T> type) {
-        return customRepository.findById((String) key)
+    public <T> T get(@NotNull Object key, Class<T> type) {
+        return customRepository.findByUUId((String) key)
                 .map(custom -> type.cast(custom.getMessage()))
                 .orElse(null);
     }
 
     @Override
     public <T> T get(@NotNull Object key, @NotNull Callable<T> valueLoader) {
-        return customRepository.findById((String) key)
+        return customRepository.findByUUId((String) key)
                 .map(custom -> {
                     try {
                         return valueLoader.call();
@@ -56,7 +56,7 @@ public class JdbcCache implements Cache {
     }
 
     @Override
-    public void put(Object key, Object value) {
+    public void put(@NotNull Object key, Object value) {
         Custom custom = new Custom();
         custom.setId((String) key);
         custom.setMessage(value);
@@ -64,8 +64,8 @@ public class JdbcCache implements Cache {
     }
 
     @Override
-    public void evict(Object key) {
-        customRepository.findById((String) key).ifPresent(customRepository::delete);
+    public void evict(@NotNull Object key) {
+        customRepository.findByUUId((String) key).ifPresent(customRepository::delete);
     }
 
     @Override

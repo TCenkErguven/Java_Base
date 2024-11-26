@@ -15,4 +15,5 @@ public class FindByUUIDResponseDto {
     private String errorMessage;
     private Boolean status;
     private Integer code;
+    private Object custom;
 }

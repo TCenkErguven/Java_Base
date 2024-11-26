@@ -17,6 +17,7 @@ ext {
             springAOP       : "3.3.3",
             oracleDB        : "23.3.0.23.09",
             grpc            : "3.1.0.RELEASE",
+            protoJavaConverter       : "4.28.2"
     ]
 
     libs = [
@@ -63,5 +64,6 @@ ext {
             grpcStub                    : "io.grpc:grpc-stub:1.62.2",
             grpcStubProtobuf            : "io.grpc:grpc-protobuf:1.62.2",
             grpcNetty                   : "io.grpc:grpc-netty-shaded:1.63.0",
+            protoJavaConverter          : "com.google.protobuf:protobuf-java-util:$versions.protoJavaConverter"
     ]
 }

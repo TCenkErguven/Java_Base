@@ -1,17 +1,24 @@
 package com.hazelcast.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.Struct.Builder;
 import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.util.Map;
+
 @GrpcService
 public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
 
     private final HazelcastService hazelcastService;
+    private final ObjectMapper objectmapper;
 
     public DuplicateGrpcService(HazelcastService hazelcastService){
         this.hazelcastService = hazelcastService;
+        this.objectmapper = new ObjectMapper();
     }
 
     @Override
@@ -41,23 +48,19 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
     public void queryForMessage(FindUUIDRequest request, StreamObserver<ResponseWrapper> responseObserver) {
         try {
             Custom custom = hazelcastService.validateRequestUUID(request);
-            Struct.Builder structBuilder = Struct.newBuilder();
             //#TODO JSONFORMAT dependency will be added
-            // JsonFormat.parser().ignoringUnknownFields().merge(json, structBuilder);
-
-
+            String jsonCustom = objectmapper.writeValueAsString(custom);
+            Struct.Builder structBuilder = Struct.newBuilder();
+            JsonFormat.parser().ignoringUnknownFields().merge(jsonCustom, structBuilder);
+            Struct struct = structBuilder.build();
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()
-                    .setCustom(CustomResponse
-                            .newBuilder()
-                            .setUuid(custom.getTransactionUUID())
-                            .setTransactionMessage(custom.getMessage().toString())
-                            .build())
-                    .setStatus(ResponseObject
-                            .newBuilder()
-                            .setCode(200)
-                            .setStatus(true)
-                            ).build());
+                            .putData("custom", Value.newBuilder().setStructValue(struct).build())
+                            .setStatus(ResponseObject
+                                    .newBuilder()
+                                    .setCode(200)
+                                    .setStatus(true)
+                                    ).build());
         } catch (Exception e) {
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()

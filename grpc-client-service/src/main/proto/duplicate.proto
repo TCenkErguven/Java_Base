@@ -18,6 +18,7 @@ message SaveRequest {
 message ResponseWrapper {
   ResponseObject status = 1;
   CustomResponse custom = 2;
+  map<string, Value> data = 3;
 }
 
 message ResponseObject {
@@ -30,6 +31,8 @@ message CustomResponse {
   string uuid = 1;
   string transactionMessage = 2;
 }
+
+
 
 message Value {
   oneof kind {

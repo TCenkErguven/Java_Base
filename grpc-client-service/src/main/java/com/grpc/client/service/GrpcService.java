@@ -1,5 +1,6 @@
 package com.grpc.client.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grpc.client.dto.FindByUUIDResponseDto;
 import com.grpc.client.dto.SaveRequestDto;
 import com.grpc.client.dto.SaveResponseDto;
@@ -7,6 +8,7 @@ import com.grpc.client.proto.SimpleGrpc;
 import com.grpc.client.utility.GrpcHelper;
 import com.hazelcast.server.proto.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +19,9 @@ public class GrpcService {
 
     @GrpcClient("duplicateService")
     private DuplicateGrpc.DuplicateBlockingStub duplicateBlockingStub;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public SaveResponseDto save(SaveRequestDto dto){
 
@@ -58,6 +63,14 @@ public class GrpcService {
             response.setErrorMessage(grpcResponse.getStatus().getMessage());
             response.setUuid(grpcResponse.getCustom().getUuid());
             response.setMessage(grpcResponse.getCustom().getTransactionMessage());
+
+            Struct struct = grpcResponse.getDataMap().get("custom").getStructValue();
+            String extractedUuid = struct.getFieldsMap().get("uuid").getStringValue();
+            String extractedMessage = struct.getFieldsMap().get("transactionMessage").getStringValue();
+
+            response.setUuid(extractedUuid);
+            response.setMessage(extractedMessage);
+
         }
         return response;
     }
