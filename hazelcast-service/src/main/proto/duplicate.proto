@@ -4,6 +4,7 @@ option java_multiple_files = true;
 option java_package = "com.hazelcast.server.proto";
 option java_outer_classname = "DuplicateProto";
 
+import "google/protobuf/struct.proto";
 
 
 message FindUUIDRequest {
@@ -18,7 +19,7 @@ message SaveRequest {
 message ResponseWrapper {
   ResponseObject status = 1;
   CustomResponse custom = 2;
-  map<string, Value> data = 3;
+  google.protobuf.Struct data = 3;
 }
 
 message ResponseObject {

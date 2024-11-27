@@ -2,9 +2,9 @@ package com.hazelcast.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
-import com.google.protobuf.Struct.Builder;
 import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.*;
+import com.hazelcast.utility.ProtoHelper;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
@@ -55,12 +55,12 @@ public class DuplicateGrpcService extends DuplicateGrpc.DuplicateImplBase {
             Struct struct = structBuilder.build();
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()
-                            .putData("custom", Value.newBuilder().setStructValue(struct).build())
-                            .setStatus(ResponseObject
-                                    .newBuilder()
-                                    .setCode(200)
-                                    .setStatus(true)
-                                    ).build());
+                    .setData(ProtoHelper.fromJson(jsonCustom).build())
+                    .setStatus(ResponseObject
+                            .newBuilder()
+                            .setCode(200)
+                            .setStatus(true)
+                    ).build());
         } catch (Exception e) {
             responseObserver.onNext(ResponseWrapper
                     .newBuilder()

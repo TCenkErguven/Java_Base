@@ -58,9 +58,13 @@ public class JdbcCache implements Cache {
     @Override
     public void put(@NotNull Object key, Object value) {
         Custom custom = new Custom();
-        custom.setId((String) key);
+        custom.setTransactionUUID((String) key);
         custom.setMessage(value);
-        customRepository.save(custom);
+        try{
+            customRepository.save(custom);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

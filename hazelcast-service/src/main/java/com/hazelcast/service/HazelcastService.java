@@ -1,21 +1,28 @@
 package com.hazelcast.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.exception.ErrorType;
 import com.hazelcast.exception.HazelCastServiceSaveException;
 import com.hazelcast.exception.HazelCastServiceUpdateException;
 import com.hazelcast.model.Custom;
 import com.hazelcast.server.proto.FindUUIDRequest;
 import com.hazelcast.server.proto.SaveRequest;
+import org.jetbrains.kotlin.com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HazelcastService {
     private final JdbcService jdbcService;
     private final CacheService cacheService;
+    private final ObjectMapper objectMapper;
 
-    public HazelcastService(JdbcService jdbcService, CacheService cacheService) {
+    public HazelcastService(JdbcService jdbcService,
+                            CacheService cacheService,
+                            ObjectMapper objectMapper) {
         this.jdbcService = jdbcService;
         this.cacheService = cacheService;
+        this.objectMapper = objectMapper;
     }
 
     // #TODO Logger will be added instead of system.out and Impl file configuration will be added soon...
@@ -49,7 +56,10 @@ public class HazelcastService {
         Custom custom = null;
         try {
             custom = cacheService.cacheableFindByUUID(request.getUuid());
-            custom.setMessage(request.getCustom());
+            JsonNode jsonObject = objectMapper.createObjectNode()
+                    .put("transactionMessage", request.getCustom().getTransactionMessage())
+                    .put("uuid", request.getCustom().getUuid());
+            custom.setMessage(objectMapper.writeValueAsString(jsonObject));
             cacheService.cacheableUpdate(custom);
         } catch (Exception e) {
             throw new HazelCastServiceUpdateException(ErrorType.INTERNAL_ERROR);

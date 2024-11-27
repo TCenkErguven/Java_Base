@@ -1,11 +1,11 @@
 package com.grpc.client.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.Struct;
 import com.grpc.client.dto.FindByUUIDResponseDto;
 import com.grpc.client.dto.SaveRequestDto;
 import com.grpc.client.dto.SaveResponseDto;
 import com.grpc.client.proto.SimpleGrpc;
-import com.grpc.client.utility.GrpcHelper;
 import com.hazelcast.server.proto.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +64,8 @@ public class GrpcService {
             response.setUuid(grpcResponse.getCustom().getUuid());
             response.setMessage(grpcResponse.getCustom().getTransactionMessage());
 
-            Struct struct = grpcResponse.getDataMap().get("custom").getStructValue();
-            String extractedUuid = struct.getFieldsMap().get("uuid").getStringValue();
-            String extractedMessage = struct.getFieldsMap().get("transactionMessage").getStringValue();
+            Struct struct = grpcResponse.getData();
 
-            response.setUuid(extractedUuid);
-            response.setMessage(extractedMessage);
 
         }
         return response;
