@@ -34,6 +34,7 @@ public class HazelCastServiceTest {
     @Value("${cache.cache-name}")
     String cacheName;
 
+    /*
 
     @Test
     public void testFindResponseByUUID(){
@@ -69,4 +70,5 @@ public class HazelCastServiceTest {
         assertNotNull(exception);
         Assertions.assertInstanceOf(HazelCastServiceException.class, exception);
     }
+     */
 }

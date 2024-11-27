@@ -3,6 +3,7 @@ package com.hazelcast.service;
 import com.hazelcast.dto.SaveRequestDto;
 import com.hazelcast.exception.ErrorType;
 import com.hazelcast.exception.HazelCastServiceException;
+import com.hazelcast.spring.cache.HazelcastCache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

@@ -28,12 +28,12 @@ public class HazelcastController {
     public ResponseEntity<SaveRequestDto> findByUUID(@PathVariable String uuid){
         return ResponseEntity.ok(service.findResponseByUUID(uuid));
     }
-    /*
+
     @PostMapping("/save/hazel")
     public ResponseEntity<SaveRequestDto> hazelCastSave(@RequestBody SaveRequestDto dto) {
-        return ResponseEntity.ok(service.saveWithTTL(dto));
+        return ResponseEntity.ok(service.save(dto));
     }
-    */
+
 
     @DeleteMapping("/delete-all")
     public void deleteAll(){

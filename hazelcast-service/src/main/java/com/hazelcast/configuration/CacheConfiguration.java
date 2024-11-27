@@ -1,5 +1,6 @@
 package com.hazelcast.configuration;
 
+import com.hazelcast.cache.HazelcastCustomCacheManager;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientConnectionStrategyConfig;
@@ -21,13 +22,13 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        return new HazelcastCacheManager(createHazelcastInstance());
+        return new HazelcastCustomCacheManager(createHazelcastInstance());
     }
 
 
     public HazelcastInstance createHazelcastInstance() {
         HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
-        instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
+    //    instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
         return instance;
     }
 
