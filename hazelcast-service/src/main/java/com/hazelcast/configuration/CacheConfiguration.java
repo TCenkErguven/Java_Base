@@ -1,6 +1,5 @@
 package com.hazelcast.configuration;
 
-import com.hazelcast.cache.HazelcastCustomCacheManager;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientConnectionStrategyConfig;
@@ -13,8 +12,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Configuration
 @EnableCaching
@@ -22,13 +19,13 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        return new HazelcastCustomCacheManager(createHazelcastInstance());
+        return new HazelcastCacheManager(createHazelcastInstance());
     }
 
-
+    @Bean
     public HazelcastInstance createHazelcastInstance() {
         HazelcastInstance instance = HazelcastClient.newHazelcastClient(createClientConfig());
-    //    instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
+        instance.getConfig().addMapConfig(new MapConfig("save-dto").setTimeToLiveSeconds(15));
         return instance;
     }
 

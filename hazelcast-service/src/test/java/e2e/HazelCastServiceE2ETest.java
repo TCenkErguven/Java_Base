@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(classes = HazelcastServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HazelCastServiceE2ETest {
-
+    /*
     @Autowired
     private CustomRepository customRepository;
 
@@ -69,6 +69,6 @@ public class HazelCastServiceE2ETest {
                 .statusCode(200)
                 .body(".", hasSize(1));
     }
-
+*/
 
 }

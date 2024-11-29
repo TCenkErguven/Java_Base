@@ -4,18 +4,62 @@ option java_multiple_files = true;
 option java_package = "com.hazelcast.server.proto";
 option java_outer_classname = "DuplicateProto";
 
+import "google/protobuf/struct.proto";
 
+
+message FindUUIDRequest {
+  string uuid = 1;
+}
 
 message SaveRequest {
   string uuid = 1;
-  string message = 2;
+  Struct data = 2;
 }
 
-message QueryRequest {
-  string uuid = 1;
+message ResponseWrapper {
+  DuplicateInfoResponse info = 1;
+  DuplicateDataResponse data = 2;
 }
+
+message DuplicateInfoResponse {
+  int32 statusCode = 1;
+  string status = 2;
+  bool isSuccess = 3;
+  string errorMessage = 4;
+}
+
+message DuplicateDataResponse {
+  string uuid = 1;
+  google.protobuf.Struct transactionMessage = 2;
+}
+
+
+
+message Value {
+  oneof kind {
+    NullValue null_value = 1;
+    double number_value = 2;
+    string string_value = 3;
+    bool bool_value = 4;
+    Struct struct_value = 5;
+    ListValue list_value = 6;
+  }
+}
+
+enum NullValue {
+  NULL_VALUE = 0;
+}
+
+message ListValue {
+  repeated Value values = 1;
+}
+
+message Struct {
+  map<string, Value> fields = 1;
+}
+
 
 service Duplicate {
-  rpc QueryForMessage(QueryRequest) returns (SaveRequest){}
-  rpc SaveMessage(SaveRequest) returns (SaveRequest){}
+  rpc QueryForMessage(FindUUIDRequest) returns (ResponseWrapper){}
+  rpc SaveMessage(SaveRequest) returns (ResponseWrapper){}
 }

@@ -19,14 +19,13 @@ public class CacheService {
     @Cacheable(value = "save-dto", key = "#dto.uuid")
     public SaveRequestDto cacheableSave(SaveRequestDto dto) {
         try {
-            customService.save(dto);
-            return dto;
+            return customService.save(dto);
         } catch (Exception e) {
             throw new HazelCastServiceException(ErrorType.INTERNAL_ERROR);
         }
     }
 
-    @Cacheable(value = "save-dto",  key = "#dto.uuid")
+    @Cacheable(value = "save-dto", key = "#dto.uuid")
     public SaveRequestDto cacheableFindByUUID(String uuid){
         try {
             return customService.findByUUId(uuid);

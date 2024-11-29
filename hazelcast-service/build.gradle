@@ -19,6 +19,7 @@ dependencies {
     implementation libs.grpcStub
     implementation libs.grpcStubProtobuf
     implementation libs.protobuf
+    implementation libs.protoJavaConverter
 }
 
 protobuf {
